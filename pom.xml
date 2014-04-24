@@ -43,9 +43,36 @@
         <exoplatform.version>4.0.0</exoplatform.version>
         <javax.enterprise.cdi.version>1.0-SP4</javax.enterprise.cdi.version>
         <juzu.version>0.6.0</juzu.version>
+        <!-- The apache tomcat version to bundle -->
+        <org.apache.tomcat.version>7.0.42</org.apache.tomcat.version>
+        <!-- The MongoDB API -->
+        <de.flapdoodle.embed.mongo>1.27</de.flapdoodle.embed.mongo>
+        <mongodb-java-driver.version>2.11.1</mongodb-java-driver.version>
     </properties>
     <dependencyManagement>
         <dependencies>
+            <!-- Used to write a listener -->
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-catalina</artifactId>
+                <version>${org.apache.tomcat.version}</version>
+            </dependency>
+            <!-- Used to integrate Mongo API -->
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongo-java-driver</artifactId>
+                <version>${mongodb-java-driver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.flapdoodle.embed</groupId>
+                <artifactId>de.flapdoodle.embed.mongo</artifactId>
+                <version>${de.flapdoodle.embed.mongo}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.flapdoodle.embed</groupId>
+                <artifactId>de.flapdoodle.embed.process</artifactId>
+                <version>1.25</version>
+            </dependency>
             <dependency>
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>

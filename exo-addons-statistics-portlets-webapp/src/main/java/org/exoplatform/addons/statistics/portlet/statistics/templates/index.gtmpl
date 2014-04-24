@@ -1,0 +1,48 @@
+<div class="statistics" style="padding: 10px" id="statistics">
+
+<div ng-controller="statisticsCtrl">
+<div class="mode-items">
+<span class="uiRadio">
+<label class="radio">
+<input type="radio" name="stat" value="happy" ng-model="stat" ng-click="loadStat('happy')"/>
+<span>happy</span>
+				</label>
+</span>
+         </div>
+
+<form action="@{add()}" method="post" style="float:left">
+<fieldset>
+<div class="controls">
+<div class="input-append">
+<input class="span2" type="text" size="16"name="username" value=""/>
+</div>
+					<div class="input-append">
+						<input class="span2" type="text" size="16"name="from" value=""/>
+</div>
+					<div class="input-append">
+						<input class="span2" type="text" size="16"name="type" value=""/>
+</div>
+					<div class="input-append">
+						<input class="span2" type="text" size="16"name="category" value=""/>
+</div>
+					<div class="input-append">
+						<input class="span2" type="text" size="16"name="categoryId" value=""/>
+</div>
+					<div class="input-append">
+						<input class="span2" type="text" size="16"name="content" value=""/>
+</div>
+					<div class="input-append">
+						<input class="span2" type="text" size="16"name="link" value=""/>
+</div>
+					<div class="input-append">
+						<input class="span2" type="text" size="16"name="isRead" value=""/><button type="submit" class="btn">Add</button>
+					</div>
+</div>
+            </fieldset>
+</form>
+
+        <div style="clear:both"/>
+
+</div>
+
+</div>
