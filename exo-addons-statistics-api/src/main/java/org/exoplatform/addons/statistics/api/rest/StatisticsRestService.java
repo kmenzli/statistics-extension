@@ -15,6 +15,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,6 +29,8 @@ public class StatisticsRestService implements ResourceContainer {
     private static final Log LOG = ExoLogger.getLogger(StatisticsRestService.class);
 
     StatisticsService statisticsService = null;
+
+    private StatisticsList statistics = null;
 
     private static String[] mediaTypes = new String[] { "json", "xml" };
 
@@ -43,9 +47,7 @@ public class StatisticsRestService implements ResourceContainer {
 
         } catch (Exception E) {
 
-            LOG.error("Cannot cleanup statistics ", E);
-
-            return Util.getResponse(null, uriInfo, MediaType.APPLICATION_JSON_TYPE, Response.Status.INTERNAL_SERVER_ERROR);
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 
         }
 
@@ -100,19 +102,21 @@ public class StatisticsRestService implements ResourceContainer {
 
         List<StatisticBO> statisticBOs = null;
 
+        statistics =  new StatisticsList();
+
         try {
 
             statisticBOs = statisticsService.getStatisticsByUserName(username);
 
+            statistics.setStatistics(statisticBOs);
+
         } catch (Exception E) {
 
-            LOG.error("Cannot load statistics when cretiria username=["+username+"] ", E);
-
-            return Util.getResponse(statisticBOs, uriInfo, MediaType.APPLICATION_JSON_TYPE, Response.Status.INTERNAL_SERVER_ERROR);
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 
         }
 
-        return Util.getResponse(statisticBOs, uriInfo, mediaType, Response.Status.OK);
+        return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
     }
 
     @GET
@@ -127,19 +131,21 @@ public class StatisticsRestService implements ResourceContainer {
 
         List<StatisticBO> statisticBOs = null;
 
+        statistics =  new StatisticsList();
+
         try {
 
             statisticBOs = statisticsService.getStatisticsByCategory(category);
 
+            statistics.setStatistics(statisticBOs);
+
         } catch (Exception E) {
 
-            LOG.error("Cannot load statistics when cretiria category=["+category+"] ", E);
-
-            return Util.getResponse(statisticBOs, uriInfo, MediaType.APPLICATION_JSON_TYPE, Response.Status.INTERNAL_SERVER_ERROR);
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 
         }
 
-        return Util.getResponse(statisticBOs, uriInfo, mediaType, Response.Status.OK);
+        return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
     }
 
     @GET
@@ -154,19 +160,21 @@ public class StatisticsRestService implements ResourceContainer {
 
         List<StatisticBO> statisticBOs = null;
 
+        statistics =  new StatisticsList();
+
         try {
 
             statisticBOs = statisticsService.getStatisticsByType(type);
 
+            statistics.setStatistics(statisticBOs);
+
         } catch (Exception E) {
 
-            LOG.error("Cannot load statistics when cretiria type=["+type+"] ", E);
-
-            return Util.getResponse(statisticBOs, uriInfo, MediaType.APPLICATION_JSON_TYPE, Response.Status.INTERNAL_SERVER_ERROR);
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 
         }
 
-        return Util.getResponse(statisticBOs, uriInfo, mediaType, Response.Status.OK);
+        return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
 
     }
 
@@ -181,19 +189,59 @@ public class StatisticsRestService implements ResourceContainer {
 
         List<StatisticBO> statisticBOs = null;
 
+        statistics =  new StatisticsList();
+
+
         try {
 
             statisticBOs = statisticsService.getAllStatistics();
 
+            statistics.setStatistics(statisticBOs);
+
         } catch (Exception E) {
 
-            LOG.error("Cannot load statistics ", E);
-
-            return Util.getResponse(statisticBOs, uriInfo, MediaType.APPLICATION_JSON_TYPE, Response.Status.INTERNAL_SERVER_ERROR);
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 
         }
 
-        return Util.getResponse(statisticBOs, uriInfo, mediaType, Response.Status.OK);
+        return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
+    }
+
+    @XmlRootElement
+    static public class StatisticsList {
+
+       private List<StatisticBO> _statistics;
+
+        /**
+         * sets statistics list
+         *
+         * @param statistics list
+         */
+        public void setStatistics(List<StatisticBO> statistics) {
+            _statistics = statistics;
+        }
+
+        /**
+         * gets statistics list
+         *
+         * @return statistics list
+         */
+        public List<StatisticBO> getStatistics() {
+            return _statistics;
+        }
+
+        /**
+         * adds space to space list
+         *
+         * @param statisticBO
+         * @see org.exoplatform.addons.statistics.api.bo.StatisticBO
+         */
+        public void addStatisticBO(StatisticBO statisticBO) {
+            if (_statistics == null) {
+                _statistics = new LinkedList<StatisticBO>();
+            }
+            _statistics.add(statisticBO);
+        }
     }
 
 }

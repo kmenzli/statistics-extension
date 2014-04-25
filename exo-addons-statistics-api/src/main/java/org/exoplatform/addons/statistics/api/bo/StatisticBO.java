@@ -1,14 +1,29 @@
 package org.exoplatform.addons.statistics.api.bo;
 
-import java.io.Serializable;
+import javax.xml.bind.annotation.*;
 import java.util.List;
 
 /**
  * Created by menzli on 22/04/14.
  */
-public class StatisticBO implements Serializable {
 
-    private String user, from, type, content, link, category, categoryId;
+@XmlType(propOrder = { "user", "from", "type", "category", "categoryId", "content", "link", "timestamp" })
+public class StatisticBO {
+
+    //@XmlElement(name = "user")
+    private String user;
+
+    private String from;
+
+    private String type;
+
+    private String content;
+
+    private String link;
+
+    private String category;
+
+    private String categoryId;
 
     private Long timestamp;
 
@@ -96,7 +111,7 @@ public class StatisticBO implements Serializable {
         return sb.toString();
     }
 
-    public static String notificationstoJSON(List<StatisticBO> statisticBOs)
+    public static String statisticstoJSON(List<StatisticBO> statisticBOs)
     {
         StringBuilder sb = new StringBuilder();
         sb.append("\"statistics\": [");
