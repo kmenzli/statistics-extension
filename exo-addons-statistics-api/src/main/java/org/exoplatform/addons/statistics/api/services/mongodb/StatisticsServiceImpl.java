@@ -74,7 +74,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
         if (type != null) {
 
-            query.put("category", type);
+            query.put("type", type);
 
         }
 
