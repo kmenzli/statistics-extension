@@ -5,5 +5,6 @@
         xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
 
     <import>jar:/conf/portal/services-configuration.xml</import>
+    <import>jar:/conf/portal/properties-configuration.xml</import>
 
 </configuration>

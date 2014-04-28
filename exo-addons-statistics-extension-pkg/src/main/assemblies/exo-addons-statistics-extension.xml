@@ -33,13 +33,6 @@
                 <include>**</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>src/main/bin</directory>
-            <outputDirectory>/statistics/bin</outputDirectory>
-            <includes>
-                <include>**</include>
-            </includes>
-        </fileSet>
     </fileSets>
     <dependencySets>
         <dependencySet>
