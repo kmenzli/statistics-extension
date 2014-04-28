@@ -16,7 +16,7 @@
                 <property name="statistics.database.server.name" value="${statistics.database.server.name:statistics}" />
                 <property name="statistics.database.server.authentication" value="${statistics.database.server.authentication:false}" />
                 <property name="statistics.database.server.user" value="${statistics.database.server.user:admin}" />
-                <property name="statistics.database.server.password" value="${statistics.database.server.password:admin}" />
+                <property name="statistics.database.server.password" value="${statistics.database.server.password:pass}" />
             </properties-param>
         </init-params>
     </component>
