@@ -2,6 +2,7 @@ package org.exoplatform.addons.statistics.api.rest;
 
 
 import org.exoplatform.addons.statistics.api.bo.StatisticBO;
+import org.exoplatform.addons.statistics.api.exception.StatisticsException;
 import org.exoplatform.addons.statistics.api.services.StatisticsService;
 import org.exoplatform.addons.statistics.api.utils.ServiceLookupManager;
 import org.exoplatform.addons.statistics.api.utils.Util;
@@ -91,12 +92,16 @@ public class StatisticsRestService implements ResourceContainer {
 
 
     @GET
-    @Path("/user/{username}.{format}")
-    public Response getStatisticsByUserName(@Context UriInfo uriInfo,
-                                            @PathParam("username") String username,
-                                            @PathParam("format") String format) throws Exception {
-
-        statisticsService = ServiceLookupManager.getInstance().getStatisticsService();
+    @Path("/query.{format}")
+    @RolesAllowed("users")
+    public Response search(@Context UriInfo uriInfo,
+                           @QueryParam("criteria") String criteria,
+                           @DefaultValue("ALL") @QueryParam("scope") String scope,
+                           @DefaultValue("10") @QueryParam("offset") String offset,
+                           @DefaultValue("100") @QueryParam("limit") String limit,
+                           @DefaultValue("relevancy") @QueryParam("sort") String sort,
+                           @DefaultValue("desc") @QueryParam("order") String order,
+                           @PathParam("format") String format) throws Exception {
 
         MediaType mediaType = Util.getMediaType(format, mediaTypes);
 
@@ -104,15 +109,30 @@ public class StatisticsRestService implements ResourceContainer {
 
         statistics =  new StatisticsList();
 
+
         try {
 
-            statisticBOs = statisticsService.getStatisticsByUserName(username);
+            String searchScope = Util.computeSearchParameters(criteria,scope);
+
+            statisticsService = ServiceLookupManager.getInstance().getStatisticsService();
+
+
+            statisticBOs = statisticsService.search(criteria, searchScope, Integer.parseInt(offset), Integer.parseInt(limit), sort, order);
 
             statistics.setStatistics(statisticBOs);
 
-        } catch (Exception E) {
+        } catch (StatisticsException E) {
 
-            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+            LOG.warn("The search parameters used has not been filled out correctly please check your request, scope ["+scope+"] and criteria ["+criteria+"]");
+
+            return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
+
+
+       } catch (Exception E) {
+
+            LOG.warn("The search parameters used has not been filled out correctly please check your request, scope ["+scope+"] and criteria ["+criteria+"]");
+
+            return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
 
         }
 
@@ -120,91 +140,17 @@ public class StatisticsRestService implements ResourceContainer {
     }
 
     @GET
-    @Path("/category/{category}.{format}")
-    public Response getStatisticsByCategory(@Context UriInfo uriInfo,
-                                            @PathParam("category") String category,
-                                            @PathParam("format") String format) throws Exception {
-
-        statisticsService = ServiceLookupManager.getInstance().getStatisticsService();
-
-        MediaType mediaType = Util.getMediaType(format, mediaTypes);
-
-        List<StatisticBO> statisticBOs = null;
-
-        statistics =  new StatisticsList();
-
-        try {
-
-            statisticBOs = statisticsService.getStatisticsByCategory(category);
-
-            statistics.setStatistics(statisticBOs);
-
-        } catch (Exception E) {
-
-            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-
-        }
-
-        return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
+    @Path("/export/.{format}")
+    @RolesAllowed("administrators")
+    public Response exportStatistics() throws Exception {
+        throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE);
     }
 
     @GET
-    @Path("/type/{type}.{format}")
-    public Response getStatisticsByType(@Context UriInfo uriInfo,
-                                        @PathParam("type") String type,
-                                        @PathParam("format") String format) throws Exception {
-
-        statisticsService = ServiceLookupManager.getInstance().getStatisticsService();
-
-        MediaType mediaType = Util.getMediaType(format, mediaTypes);
-
-        List<StatisticBO> statisticBOs = null;
-
-        statistics =  new StatisticsList();
-
-        try {
-
-            statisticBOs = statisticsService.getStatisticsByType(type);
-
-            statistics.setStatistics(statisticBOs);
-
-        } catch (Exception E) {
-
-            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-
-        }
-
-        return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
-
-    }
-
-    @GET
-    @Path("/all.{format}")
-    public Response getAllStatistics(@Context UriInfo uriInfo,
-                                              @PathParam("format") String format) throws Exception {
-
-        statisticsService = ServiceLookupManager.getInstance().getStatisticsService();
-
-        MediaType mediaType = Util.getMediaType(format, mediaTypes);
-
-        List<StatisticBO> statisticBOs = null;
-
-        statistics =  new StatisticsList();
-
-
-        try {
-
-            statisticBOs = statisticsService.getAllStatistics();
-
-            statistics.setStatistics(statisticBOs);
-
-        } catch (Exception E) {
-
-            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
-
-        }
-
-        return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
+    @Path("/query/.{format}")
+    @RolesAllowed("administrators")
+    public Response importStatistics() throws Exception {
+        throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE);
     }
 
     @XmlRootElement

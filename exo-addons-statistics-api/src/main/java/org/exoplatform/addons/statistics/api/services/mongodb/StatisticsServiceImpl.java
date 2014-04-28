@@ -2,7 +2,9 @@ package org.exoplatform.addons.statistics.api.services.mongodb;
 
 import com.mongodb.*;
 import org.exoplatform.addons.statistics.api.bo.StatisticBO;
+import org.exoplatform.addons.statistics.api.exception.StatisticsException;
 import org.exoplatform.addons.statistics.api.services.StatisticsService;
+import org.exoplatform.addons.statistics.api.utils.Util;
 import org.exoplatform.addons.statistics.api.web.listener.StatisticsLifecycleListener;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -35,26 +37,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public StatisticBO addEntry(String user, String from, String type, String category, String categoryId, String content, String link) {
-        DBCollection coll = db().getCollection(M_STATISTICSS);
-        BasicDBObject doc = new BasicDBObject();
-        doc.put("timestamp", System.currentTimeMillis());
-        doc.put("user", user);
-        doc.put("from", from);
-        doc.put("type", type);
-        doc.put("category", category);
-        doc.put("categoryId", categoryId);
-        doc.put("content", content);
-        doc.put("link", link);
-        doc.put("isRead", false);
-
-        coll.insert(doc);
-
-        return null;
-    }
-
-
-    public List<StatisticBO> getStatisticsByCriteria(String username, String category, String type, boolean cached) throws Exception {
+    public List<StatisticBO> search(String criteria, String scope, int offset, int limit, String sort, String order) throws Exception {
 
         List<StatisticBO> statistics = new ArrayList<StatisticBO>();
 
@@ -62,23 +45,15 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         BasicDBObject query = new BasicDBObject();
 
-        if (username != null) {
+        DBCursor cursor = null;
 
-            query.put("user", username);
-
-        }
-        if (category != null) {
-
-            query.put("category", category);
-
-        }
-        if (type != null) {
-
-            query.put("type", type);
-
+        //TODO when the search is for content,the like operator should be used
+        if (!scope.equalsIgnoreCase("ALL")) {
+            query.put(scope,criteria);
         }
 
-        DBCursor cursor = coll.find(query);
+
+        cursor = coll.find(query);
 
         while (cursor.hasNext()) {
 
@@ -100,29 +75,43 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
 
         return statistics;
-
     }
+
 
     @Override
-    public List<StatisticBO> getStatisticsByUserName(String username) throws Exception {
+    public StatisticBO addEntry(String user, String from, String type, String category, String categoryId, String content, String link) {
+        DBCollection coll = db().getCollection(M_STATISTICSS);
+        BasicDBObject doc = new BasicDBObject();
+        doc.put("timestamp", System.currentTimeMillis());
+        doc.put("user", user);
+        doc.put("from", from);
+        doc.put("type", type);
+        doc.put("category", category);
+        doc.put("categoryId", categoryId);
+        doc.put("content", content);
+        doc.put("link", link);
+        doc.put("isRead", false);
 
-       return getStatisticsByCriteria(username, null, null,false);
+        coll.insert(doc);
+
+        return null;
     }
 
-    @Override
-    public List<StatisticBO> getStatisticsByCategory(String category) throws Exception {
-        return getStatisticsByCriteria(null, category, null, false);
-    }
 
-    @Override
-    public List<StatisticBO> getStatisticsByType(String type) throws Exception {
-        return getStatisticsByCriteria(null, null, type, false);
-
-    }
 
     @Override
     public List<StatisticBO> getAllStatistics() throws Exception {
-        return getStatisticsByCriteria(null, null, null, false);
+        return search(null, "ALL", 0 , 0, null, null);
 
+    }
+
+    @Override
+    public void exportStatistics() throws Exception {
+        throw new UnsupportedOperationException( "Method not yet implemented" );
+    }
+
+    @Override
+    public boolean importStatistics() throws Exception {
+        throw new UnsupportedOperationException( "Method not yet implemented" );
     }
 }

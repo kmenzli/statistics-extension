@@ -1,5 +1,8 @@
 package org.exoplatform.addons.statistics.api.utils;
 
+import org.exoplatform.addons.statistics.api.exception.StatisticsException;
+import org.exoplatform.container.PortalContainer;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,6 +29,23 @@ public final class Util {
                     "(?:[\\/|\\?|\\#].*)?$");                                                               // path and query
 
 
+
+
+    //TODO use a service to manage those values instead hard coded them
+    private static String [] scopes = {"content", "ALL", "user", "category", "type"};
+
+    private static String isSupportedScope (String scope) {
+        if (scope == null) {
+            return "content";
+        }
+        for (String supportedScope : scopes) {
+            if (scope.equals(supportedScope)) {
+                return supportedScope;
+            }
+        }
+        return null;
+
+    }
 
     /**
      * Prevents constructing a new instance.
@@ -96,6 +116,32 @@ public final class Util {
                 .type(mediaType.toString() + "; charset=utf-8")
                 .status(status)
                 .build();
+    }
+
+    public static String computeSearchParameters(String criteria, String scope) throws StatisticsException {
+
+
+        String expectedScope = isSupportedScope(scope);
+
+        if ( expectedScope.equalsIgnoreCase("ALL")) {
+
+            if (criteria != null) {
+                return "content";
+
+            }
+
+            return expectedScope;
+        }
+
+        if (criteria != null) {
+
+             return expectedScope;
+
+        }
+
+        throw new StatisticsException(StatisticsException.Code.STATISTICS_VALIDATION_PARAMETER);
+
+
     }
 
 
