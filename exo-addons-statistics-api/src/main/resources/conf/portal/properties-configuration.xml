@@ -18,17 +18,6 @@
                 <property name="statistics.database.server.user" value="${statistics.database.server.user:admin}" />
                 <property name="statistics.database.server.password" value="${statistics.database.server.password:admin}" />
             </properties-param>
-            <properties-param profiles="cluster,cluster-index-local">
-                <name>properties</name>
-                <description>Filter used to notify caches</description>
-                <property name="statistics.database.server.type" value="${statistics.database.server.type.type:embed}" />
-                <property name="statistics.database.server.host" value="${statistics.database.server.host:127.0.0.1}" />
-                <property name="statistics.database.server.port" value="${statistics.database.server.port:27777}" />
-                <property name="statistics.database.server.name" value="${statistics.database.server.name:statistics}" />
-                <property name="statistics.database.server.authentication" value="${statistics.database.server.authentication:false}" />
-                <property name="statistics.database.server.user" value="${statistics.database.server.user:admin}" />
-                <property name="statistics.database.server.password" value="${statistics.database.server.password:admin}" />
-            </properties-param>
         </init-params>
     </component>
 </configuration>
