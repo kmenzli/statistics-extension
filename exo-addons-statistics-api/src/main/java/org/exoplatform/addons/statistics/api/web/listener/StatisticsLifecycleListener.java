@@ -48,6 +48,15 @@ public class StatisticsLifecycleListener implements LifecycleListener {
         }
     }
 
+    public static MongoBootstrap init() {
+        log.warning("ConnectionManager.forceNew has been used : this should never happen in Production!");
+        if (mongoBootstrap!=null)
+            mongoBootstrap.close();
+        mongoBootstrap = new MongoBootstrap();
+        return mongoBootstrap;
+    }
+
+
     public static Injector getInstance() {
         return injector_;
     }

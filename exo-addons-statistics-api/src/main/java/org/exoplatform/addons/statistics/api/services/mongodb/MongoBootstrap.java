@@ -114,5 +114,15 @@ public class MongoBootstrap implements IBootstrap {
 
         return new Mongo(new ServerAddress(host, port));
     }
+    public void close() {
+        try {
+            if (mongod != null) {
+                mongod.stop();
+                mongodExe.stop();
+            }
+            if (m!=null)
+                m.close();
+        } catch (NullPointerException e) {}
+    }
 
 }

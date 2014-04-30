@@ -14,11 +14,11 @@ public interface StatisticsService {
 
     public void cleanupStatistics() throws Exception;
 
-    public List<StatisticBO> search(String word, String type, int offset, int limit, String sort, String order) throws Exception;
+    public List<StatisticBO> search(String word, String type, int offset, int limit, String sort, String order, long timestamp) throws Exception;
 
     public StatisticBO addEntry(String user, String from, String type, String category, String categoryId, String content, String link) throws Exception;
 
-    public List<StatisticBO> getAllStatistics() throws Exception;
+    public List<StatisticBO> getAllStatistics(long timestamp) throws Exception;
 
     public void exportStatistics() throws Exception;
 

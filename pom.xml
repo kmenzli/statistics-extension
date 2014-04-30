@@ -48,9 +48,23 @@
         <!-- The MongoDB API -->
         <de.flapdoodle.embed.mongo>1.27</de.flapdoodle.embed.mongo>
         <mongodb-java-driver.version>2.11.1</mongodb-java-driver.version>
+        <!-- JUnit framework perfs -->
+        <org.databene.contiperf.version>2.2.0</org.databene.contiperf.version>
+        <org.easytesting.fest-assert-core.version>2.0M2</org.easytesting.fest-assert-core.version>
     </properties>
     <dependencyManagement>
         <dependencies>
+            <!-- JUnit framework perfs -->
+            <dependency>
+                <groupId>org.databene</groupId>
+                <artifactId>contiperf</artifactId>
+                <version>${org.databene.contiperf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.easytesting</groupId>
+                <artifactId>fest-assert-core</artifactId>
+                <version>${org.easytesting.fest-assert-core.version}</version>
+            </dependency>
             <!-- Used to write a listener -->
             <dependency>
                 <groupId>org.apache.tomcat</groupId>

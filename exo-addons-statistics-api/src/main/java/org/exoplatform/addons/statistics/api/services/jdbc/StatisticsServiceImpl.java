@@ -22,7 +22,7 @@ public class StatisticsServiceImpl implements StatisticsService, ResourceContain
     }
 
     @Override
-    public List<StatisticBO> search(String word, String type, int offset, int limit, String sort, String order) throws Exception {
+    public List<StatisticBO> search(String word, String type, int offset, int limit, String sort, String order, long timestamp) throws Exception {
         throw new UnsupportedOperationException( "Method not yet implemented" );
     }
 
@@ -33,7 +33,7 @@ public class StatisticsServiceImpl implements StatisticsService, ResourceContain
     }
 
     @Override
-    public List<StatisticBO> getAllStatistics() throws Exception {
+    public List<StatisticBO> getAllStatistics(long timestamp) throws Exception {
         throw new UnsupportedOperationException( "Method not yet implemented" );
     }
 
