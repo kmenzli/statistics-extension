@@ -9,8 +9,11 @@ import org.exoplatform.services.log.Log;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
+import java.rmi.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
+
+import java.sql.Timestamp;
 
 /**
  * Created by menzli on 21/04/14.
@@ -26,15 +29,24 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public void cleanupStatistics() throws Exception {
+    public void cleanupStatistics(long timestamp) throws Exception {
+
         DBCollection coll = StatisticsLifecycleListener.bootstrapDB().getDB().getCollection(M_STATISTICSS);
+
         BasicDBObject query = new BasicDBObject();
-//        query.put("timestamp", new BasicDBObject("$lt", System.currentTimeMillis()-24*60*60*1000));
-//    query.put("isRead", true);
+
+        if (timestamp > 0) {
+
+            query.put("timestamp", new BasicDBObject("$lt", timestamp));
+
+        }
+
         DBCursor cursor = coll.find(query);
+
         while (cursor.hasNext())
         {
             DBObject doc = cursor.next();
+
             coll.remove(doc);
         }
     }
@@ -106,8 +118,9 @@ public class StatisticsServiceImpl implements StatisticsService {
 
             return statistics;
 
-        }
 
+
+        }
 
         cursor = coll.find(query);
 
@@ -130,7 +143,6 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         }
 
-
         if (LOG.isDebugEnabled()) {
             LOG.debug("##### ["+statistics.size()+"] tuples fetched ####### ");
         }
@@ -138,8 +150,77 @@ public class StatisticsServiceImpl implements StatisticsService {
         return statistics;
     }
 
+    @Override
+    public List<StatisticBO> filter(String user, String category, String categoryId, String type, boolean isPrivate, long timestamp) throws Exception {
 
+        LinkedList<StatisticBO> statistics = new LinkedList<StatisticBO>();
 
+        DBCollection collection = db().getCollection(M_STATISTICSS);
+
+        BasicDBObject query = new BasicDBObject("isPrivate", isPrivate);
+
+        if (user != null) {
+
+            query.put("user",user);
+
+        }
+
+        if (category != null) {
+
+            query.put("category",category);
+
+        }
+
+        if (categoryId != null) {
+
+            query.put("categoryId",categoryId);
+
+        }
+
+        if (type != null) {
+
+            query.put("type",type);
+
+        }
+
+        if (timestamp > 0) {
+
+            query.put("timestamp",new BasicDBObject("$gt", timestamp));
+
+        }
+
+        DBCursor cursor = collection.find(query);
+
+        try {
+            while (cursor.hasNext()) {
+                DBObject doc = cursor.next();
+                StatisticBO statisticBO = new StatisticBO();
+                statisticBO.setTimestamp((Long)doc.get("timestamp"));
+                statisticBO.setUser(doc.get("user").toString());
+                if (doc.containsField("from")) {
+                    statisticBO.setFrom(doc.get("from").toString());
+                }
+                statisticBO.setCategory(doc.get("category").toString());
+                statisticBO.setCategoryId(doc.get("categoryId").toString());
+                statisticBO.setType(doc.get("type").toString());
+                statisticBO.setContent(doc.get("content").toString());
+                statisticBO.setLink(doc.get("link").toString());
+
+                statistics.add(statisticBO);
+            }
+         
+        } catch (Exception E) {
+
+            LOG.error("Connexion impossible : " + E.getMessage(), E);
+
+        } finally {
+
+            cursor.close();
+        }
+
+        return statistics;
+
+    }
 
     @Override
     public StatisticBO addEntry(String user, String from, String type, String category, String categoryId, String content, String link) {
@@ -153,17 +234,15 @@ public class StatisticsServiceImpl implements StatisticsService {
         doc.put("categoryId", categoryId);
         doc.put("content", content);
         doc.put("link", link);
-        doc.put("isRead", false);
+        doc.put("isPrivate", false);
 
         coll.insert(doc);
 
         return null;
     }
 
-
-
     @Override
-    public List<StatisticBO> getAllStatistics(long timestamp) throws Exception {
+    public List<StatisticBO> getStatistics(long timestamp) throws Exception {
 
         LinkedList<StatisticBO> statistics = new LinkedList<StatisticBO>();
 
@@ -173,7 +252,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         if (timestamp > 0 ) {
 
-            query.put("timestamp0", new BasicDBObject("$lt", timestamp)); //check token not updated since 10sec + status interval (15 sec)
+            query.put("timestamp", new BasicDBObject("$gte", timestamp)); //check token not updated since 10sec + status interval (15 sec)
 
         }
 

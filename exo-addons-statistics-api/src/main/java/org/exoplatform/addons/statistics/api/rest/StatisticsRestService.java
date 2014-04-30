@@ -44,7 +44,7 @@ public class StatisticsRestService implements ResourceContainer {
 
         try {
 
-            statisticsService.cleanupStatistics();
+            statisticsService.cleanupStatistics(0);
 
         } catch (Exception E) {
 

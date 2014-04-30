@@ -17,12 +17,17 @@ import java.util.List;
 public class StatisticsServiceImpl implements StatisticsService, ResourceContainer {
 
     @Override
-    public void cleanupStatistics() throws Exception {
+    public void cleanupStatistics(long timestamp) throws Exception {
         throw new UnsupportedOperationException( "Method not yet implemented" );
     }
 
     @Override
     public List<StatisticBO> search(String word, String type, int offset, int limit, String sort, String order, long timestamp) throws Exception {
+        throw new UnsupportedOperationException( "Method not yet implemented" );
+    }
+
+    @Override
+    public List<StatisticBO> filter(String user, String category, String categoryId, String type, boolean isPrivate, long timestamp) throws Exception {
         throw new UnsupportedOperationException( "Method not yet implemented" );
     }
 
@@ -33,7 +38,7 @@ public class StatisticsServiceImpl implements StatisticsService, ResourceContain
     }
 
     @Override
-    public List<StatisticBO> getAllStatistics(long timestamp) throws Exception {
+    public List<StatisticBO> getStatistics(long timestamp) throws Exception {
         throw new UnsupportedOperationException( "Method not yet implemented" );
     }
 

@@ -7,6 +7,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 /**
@@ -141,7 +144,18 @@ public final class Util {
 
         throw new StatisticsException(StatisticsException.Code.STATISTICS_VALIDATION_PARAMETER);
 
+    }
 
+    /**
+     * Converts a timestamp string to time string by the pattern: EEE MMM d HH:mm:ss Z yyyy.
+     *
+     * @param timestamp the timestamp to convert
+     * @return the time string
+     */
+    public static final String convertTimestampToDate(long timestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        return dateFormat.format(new Date(timestamp));
     }
 
 
