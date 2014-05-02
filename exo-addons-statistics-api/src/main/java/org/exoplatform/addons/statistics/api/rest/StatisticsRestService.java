@@ -68,7 +68,9 @@ public class StatisticsRestService implements ResourceContainer {
                          @FormParam("category") String category,
                          @FormParam("categoryId") String categoryId,
                          @FormParam("content") String content,
-                         @FormParam("link") String link) throws Exception  {
+                         @FormParam("link") String link,
+                         @FormParam("site") String site,
+                         @FormParam("siteType") String siteType) throws Exception  {
 
         statisticsService = ServiceLookupManager.getInstance().getStatisticsService();
 
@@ -76,7 +78,7 @@ public class StatisticsRestService implements ResourceContainer {
 
         try {
 
-           statisticBO = statisticsService.addEntry(username,from,type,category,categoryId,content,link);
+           statisticBO = statisticsService.addEntry(username,from,type,category,categoryId,content,link,site,siteType);
 
         } catch (Exception E) {
 
@@ -147,6 +149,8 @@ public class StatisticsRestService implements ResourceContainer {
                            @QueryParam("category") String category,
                            @QueryParam("categoryId") String categoryId,
                            @QueryParam("type") String type,
+                           @QueryParam("site") String site,
+                           @QueryParam("siteType") String siteType,
                            @QueryParam("timestamp") String timestamp,
                            @PathParam("format") String format) throws Exception {
 
@@ -161,7 +165,7 @@ public class StatisticsRestService implements ResourceContainer {
 
             statisticsService = ServiceLookupManager.getInstance().getStatisticsService();
 
-            statisticBOs = statisticsService.filter(user, category, categoryId,type ,true, Integer.parseInt(timestamp));
+            statisticBOs = statisticsService.filter(user, category, categoryId, type, site, siteType,true, Integer.parseInt(timestamp));
 
             statistics.setStatistics(statisticBOs);
 

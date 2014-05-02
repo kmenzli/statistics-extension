@@ -151,6 +151,8 @@ public class StatisticsServiceImpl implements StatisticsService {
             statisticBO.setType(doc.get("type").toString());
             statisticBO.setContent(doc.get("content").toString());
             statisticBO.setLink(doc.get("link").toString());
+            statisticBO.setSite(doc.get("site").toString());
+            statisticBO.setSiteType(doc.get("siteType").toString());
 
             statistics.add(statisticBO);
 
@@ -164,7 +166,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public List<StatisticBO> filter(String user, String category, String categoryId, String type, boolean isPrivate, long timestamp) throws Exception {
+    public List<StatisticBO> filter(String user, String category, String categoryId, String type, String site, String siteType, boolean isPrivate, long timestamp) throws Exception {
 
         LinkedList<StatisticBO> statistics = new LinkedList<StatisticBO>();
 
@@ -172,6 +174,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         BasicDBObject query = new BasicDBObject("isPrivate", isPrivate);
 
+        //TODO : replace if blocs by a design pattern
         if (user != null) {
 
             query.put("user",user);
@@ -202,6 +205,19 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         }
 
+        if ( site!= null ) {
+
+            query.put("site",site);
+
+        }
+
+        if (siteType != null) {
+
+            query.put("siteType",siteType);
+
+        }
+
+        //--- invoke the find method
         DBCursor cursor = collection.find(query);
 
         try {
@@ -218,7 +234,10 @@ public class StatisticsServiceImpl implements StatisticsService {
                 statisticBO.setType(doc.get("type").toString());
                 statisticBO.setContent(doc.get("content").toString());
                 statisticBO.setLink(doc.get("link").toString());
+                statisticBO.setSite(doc.get("site").toString());
+                statisticBO.setSiteType(doc.get("siteType").toString());
 
+                //--- Add the statistic tupe to the collection
                 statistics.add(statisticBO);
             }
          
@@ -228,6 +247,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         } finally {
 
+            //--- close the cursor after each invocation
             cursor.close();
         }
 
@@ -236,7 +256,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public StatisticBO addEntry(String user, String from, String type, String category, String categoryId, String content, String link) {
+    public StatisticBO addEntry(String user, String from, String type, String category, String categoryId, String content, String link, String site, String siteType) {
         DBCollection coll = db().getCollection(M_STATISTICSS);
         BasicDBObject doc = new BasicDBObject();
         doc.put("timestamp", System.currentTimeMillis());
@@ -245,10 +265,13 @@ public class StatisticsServiceImpl implements StatisticsService {
         doc.put("type", type);
         doc.put("category", category);
         doc.put("categoryId", categoryId);
+        doc.put("site", site);
+        doc.put("siteType", siteType);
         doc.put("content", content);
         doc.put("link", link);
         doc.put("isPrivate", false);
 
+        //--- add new line to the dababase (what's the difference with save() method)
         coll.insert(doc);
 
         return null;
@@ -267,7 +290,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         if (timestamp > 0 ) {
 
-            query.put("timestamp", new BasicDBObject("$gte", timestamp)); //check token not updated since 10sec + status interval (15 sec)
+            //--- get only tuples which timestap >= {{timestamp}}
+            query.put("timestamp", new BasicDBObject("$gte", timestamp));
 
         }
         try {
@@ -288,7 +312,10 @@ public class StatisticsServiceImpl implements StatisticsService {
                 statisticBO.setType(doc.get("type").toString());
                 statisticBO.setContent(doc.get("content").toString());
                 statisticBO.setLink(doc.get("link").toString());
+                statisticBO.setSite(doc.get("site").toString());
+                statisticBO.setSiteType(doc.get("siteType").toString());
 
+                //--- Add the statistic tupe to the collection
                 statistics.add(statisticBO);
 
             }

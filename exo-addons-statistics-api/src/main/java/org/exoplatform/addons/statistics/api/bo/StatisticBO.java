@@ -1,13 +1,14 @@
 package org.exoplatform.addons.statistics.api.bo;
 
 import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by menzli on 22/04/14.
  */
 
-@XmlType(propOrder = { "user", "from", "type", "category", "categoryId", "content", "link", "timestamp" })
+@XmlType(propOrder = { "user", "from", "type", "category", "categoryId", "content", "link", "site", "siteType", "timestamp" })
 public class StatisticBO {
 
     //@XmlElement(name = "user")
@@ -22,6 +23,10 @@ public class StatisticBO {
     private String link;
 
     private String category;
+
+    private String site;
+
+    private String siteType;
 
     private String categoryId;
 
@@ -91,6 +96,30 @@ public class StatisticBO {
         this.timestamp = timestamp;
     }
 
+    public String getSite() {
+        return site;
+    }
+
+    /**
+     *
+     * @param site : context management : space/intranet/ etc..
+     */
+    public void setSite(String site) {
+        this.site = site;
+    }
+
+    public String getSiteType() {
+        return siteType;
+    }
+
+    /**
+     *
+     * @param siteType : Site/Group/User
+     */
+    public void setSiteType(String siteType) {
+        this.siteType = siteType;
+    }
+
     public String toJSON()
     {
         StringBuffer sb = new StringBuffer();
@@ -104,6 +133,8 @@ public class StatisticBO {
         sb.append("\"categoryId\": \""+this.getCategoryId()+"\",");
         sb.append("\"content\": \""+this.getContent().replaceAll("\n", "<br/>")+"\",");
         sb.append("\"link\": \""+this.getLink()+"\",");
+        sb.append("\"siteType\": \""+this.getSiteType()+"\",");
+        sb.append("\"site\": \""+this.getSite()+"\",");
         sb.append("\"timestamp\": "+this.getTimestamp());
 
         sb.append("}");
@@ -130,4 +161,5 @@ public class StatisticBO {
 
         return sb.toString();
     }
+
 }

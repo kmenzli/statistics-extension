@@ -51,7 +51,7 @@ public class StatisticsTestCase extends AbstractTestCase {
     //@PerfTest(invocations = 10, threads = 1)
     public void testAddEntry() throws Exception {
 
-        addStatistics(20,null,null,null);
+        addStatistics(20,null,null,null,null,null);
 
         statisticBOs = statisticsService.getStatistics(0);
 
@@ -95,7 +95,7 @@ public class StatisticsTestCase extends AbstractTestCase {
     @PerfTest(invocations = 5, threads = 1)
     public void testGetAllStatistics() throws Exception {
 
-        addStatistics(5,null,null,null);
+        addStatistics(5,null,null,null,null,null);
 
         statisticBOs = statisticsService.getStatistics(0);
 
@@ -103,7 +103,7 @@ public class StatisticsTestCase extends AbstractTestCase {
 
         statisticsService.cleanupStatistics(0);
 
-        addStatistics(10,null,null,null);
+        addStatistics(10,null,null,null,null,null);
 
         statisticBOs = statisticsService.getStatistics(0);
 
@@ -111,7 +111,7 @@ public class StatisticsTestCase extends AbstractTestCase {
 
         statisticsService.cleanupStatistics(0);
 
-        addStatistics(20,null,null,null);
+        addStatistics(20,null,null,null,null,null);
 
         statisticBOs = statisticsService.getStatistics(0);
 
@@ -126,35 +126,35 @@ public class StatisticsTestCase extends AbstractTestCase {
     @Test
     public void testFilter() throws Exception {
 
-        addStatistics(5,null,null,null);
+        addStatistics(5,null,null,null,null,null);
         // user, category, categoryId, type, isPrivate, timestamp)
-        statisticBOs = statisticsService.filter("user1",null,null,null,false,0);
+        statisticBOs = statisticsService.filter("user1", null ,null ,null ,null ,null ,false ,0);
 
         assertThat(statisticBOs.size()).isEqualTo(1);
 
-        statisticBOs = statisticsService.filter("user1",null,"AAA",null,false,0);
+        statisticBOs = statisticsService.filter("user1" ,null ,"AAA" ,null ,null ,null ,false,0);
 
         assertThat(statisticBOs.size()).isEqualTo(0);
 
-        statisticBOs = statisticsService.filter("user1",null,"categoryId1",null,false,0);
+        statisticBOs = statisticsService.filter("user1" ,null ,"categoryId1" ,null ,null ,null ,false ,0);
 
         assertThat(statisticBOs.size()).isEqualTo(1);
 
         statisticsService.cleanupStatistics(0);
 
-        addStatistics(5,"khemais",null,null);
+        addStatistics(5,"khemais", null, null, null, null);
 
         long currenttime1 = System.currentTimeMillis();
 
         Thread.currentThread().sleep(3*1000);
 
-        addStatistics(5,"khemais","category",null);
+        addStatistics(5 ,"khemais" ,"category" ,null ,null, null);
 
-        statisticBOs = statisticsService.filter("khemais","category0", null,null,false,currenttime1);
+        statisticBOs = statisticsService.filter("khemais" ,"category0" ,null ,null ,null ,null ,false ,currenttime1);
 
         assertThat(statisticBOs.size()).isEqualTo(1);
 
-        statisticBOs = statisticsService.filter(null,null, null,null,false,currenttime1);
+        statisticBOs = statisticsService.filter(null ,null , null ,null ,null, null,false,currenttime1);
 
         assertThat(statisticBOs.size()).isEqualTo(15);
 
@@ -175,7 +175,7 @@ public class StatisticsTestCase extends AbstractTestCase {
     @Test
     public void testSearch() throws Exception {
 
-        addStatistics(5,"demo","presales","exoplatform");
+        addStatistics(5,"demo","presales","exoplatform", null, null);
 
         statisticBOs = statisticsService.search("demo","user",10,10,1,1,0);
 
@@ -203,30 +203,30 @@ public class StatisticsTestCase extends AbstractTestCase {
 
     }
 
-    private void addStatistics (int total, String theUser, String theCategory, String theType) throws Exception {
+    private void addStatistics (int total, String theUser, String theCategory, String theType, String theSite, String theSiteType) throws Exception {
 
        for (int i = 0; i < total; i++) {
 
             if ( theCategory != null) {
 
-                statisticsService.addEntry(user+i, from+i, type+i, theCategory, categoryId+i, content+i, link+i);
+                statisticsService.addEntry(user+i, from+i, type+i, theCategory, categoryId+i, content+i, link+i, theSite+i, theSiteType+i);
 
             }
 
             if ( theType != null) {
 
-                statisticsService.addEntry(user+i, from+i, theType, category+i, categoryId+i, content+i, link+i);
+                statisticsService.addEntry(user+i, from+i, theType, category+i, categoryId+i, content+i, link+i, theSite+i, theSiteType+i);
 
             }
 
            if ( theUser != null) {
 
-               statisticsService.addEntry(theUser, from+i, type+i, category+i, categoryId+i, content+i, link+i);
+               statisticsService.addEntry(theUser, from+i, type+i, category+i, categoryId+i, content+i, link+i, theSite+i, theSiteType+i);
 
            }
 
 
-            statisticsService.addEntry(user+i, from+i, type+i , category+i, categoryId+i, content+i, link+i);
+            statisticsService.addEntry(user+i, from+i, type+i , category+i, categoryId+i, content+i, link+i, theSite+i, theSiteType+i);
 
         }
 
