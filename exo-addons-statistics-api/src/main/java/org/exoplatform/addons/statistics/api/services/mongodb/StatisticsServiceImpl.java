@@ -33,6 +33,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         DBCollection coll = StatisticsLifecycleListener.bootstrapDB().getDB().getCollection(M_STATISTICSS);
 
+        DBCursor cursor = null;
+
         BasicDBObject query = new BasicDBObject();
 
         if (timestamp > 0) {
@@ -41,13 +43,20 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         }
 
-        DBCursor cursor = coll.find(query);
+        try {
 
-        while (cursor.hasNext())
-        {
-            DBObject doc = cursor.next();
+            cursor = coll.find(query);
 
-            coll.remove(doc);
+            while (cursor.hasNext())
+            {
+                DBObject doc = cursor.next();
+
+                coll.remove(doc);
+            }
+        } finally {
+
+            cursor.close();
+
         }
     }
 
@@ -252,6 +261,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         DBCollection coll = db().getCollection(M_STATISTICSS);
 
+        DBCursor cursor = null;
+
         BasicDBObject query = new BasicDBObject();
 
         if (timestamp > 0 ) {
@@ -259,28 +270,34 @@ public class StatisticsServiceImpl implements StatisticsService {
             query.put("timestamp", new BasicDBObject("$gte", timestamp)); //check token not updated since 10sec + status interval (15 sec)
 
         }
+        try {
 
-        DBCursor cursor = coll.find(query);
+            cursor = coll.find(query);
 
-        while (cursor.hasNext()) {
+            while (cursor.hasNext()) {
 
-            DBObject doc = cursor.next();
-            StatisticBO statisticBO = new StatisticBO();
-            statisticBO.setTimestamp((Long)doc.get("timestamp"));
-            statisticBO.setUser(doc.get("user").toString());
-            if (doc.containsField("from")) {
-                statisticBO.setFrom(doc.get("from").toString());
+                DBObject doc = cursor.next();
+                StatisticBO statisticBO = new StatisticBO();
+                statisticBO.setTimestamp((Long)doc.get("timestamp"));
+                statisticBO.setUser(doc.get("user").toString());
+                if (doc.containsField("from")) {
+                    statisticBO.setFrom(doc.get("from").toString());
+                }
+                statisticBO.setCategory(doc.get("category").toString());
+                statisticBO.setCategoryId(doc.get("categoryId").toString());
+                statisticBO.setType(doc.get("type").toString());
+                statisticBO.setContent(doc.get("content").toString());
+                statisticBO.setLink(doc.get("link").toString());
+
+                statistics.add(statisticBO);
+
             }
-            statisticBO.setCategory(doc.get("category").toString());
-            statisticBO.setCategoryId(doc.get("categoryId").toString());
-            statisticBO.setType(doc.get("type").toString());
-            statisticBO.setContent(doc.get("content").toString());
-            statisticBO.setLink(doc.get("link").toString());
+            return statistics;
+        } finally {
 
-            statistics.add(statisticBO);
+            cursor.close();
 
         }
-        return statistics;
 
     }
 
