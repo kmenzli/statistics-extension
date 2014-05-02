@@ -1,13 +1,13 @@
 package org.exoplatform.addons.statistics.api;
 
-import java.io.IOException;
-
 import org.exoplatform.addons.statistics.api.bootstrap.ServiceBootstrap;
 import org.exoplatform.addons.statistics.api.services.mongodb.MongoBootstrap;
 import org.exoplatform.addons.statistics.api.web.listener.StatisticsLifecycleListener;
 import org.exoplatform.commons.utils.PropertyManager;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+
+import java.io.IOException;
 
 /**
  * Created by menzli on 29/04/14.
