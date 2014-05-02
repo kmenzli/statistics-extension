@@ -63,11 +63,15 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @throws Exception
      */
     @Override
-    public List<StatisticBO> search(String criteria, String scope, int offset, int limit, String sort, String order, long timestamp) throws Exception {
+    public List<StatisticBO> search(String criteria, String scope, int offset, int limit, int sort, int order, long timestamp) throws Exception {
 
         LinkedList<StatisticBO> statistics = new LinkedList<StatisticBO>();
 
         DBCollection coll = db().getCollection(M_STATISTICSS);
+
+        BasicDBObject sortQuery = new BasicDBObject("_id", sort);
+
+        //BasicDBObject orderQuery = new BasicDBObject("_id", order);
 
         BasicDBObject query = new BasicDBObject();
 
@@ -122,7 +126,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         }
 
-        cursor = coll.find(query);
+        cursor = coll.find(query).limit(limit).sort(sortQuery);
 
         while (cursor.hasNext()) {
 

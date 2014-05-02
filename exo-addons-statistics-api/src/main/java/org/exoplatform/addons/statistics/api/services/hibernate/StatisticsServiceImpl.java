@@ -17,7 +17,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public List<StatisticBO> search(String word, String type, int offset, int limit, String sort, String order, long timestamp) throws Exception {
+    public List<StatisticBO> search(String word, String type, int offset, int limit, int sort, int order, long timestamp) throws Exception {
         throw new UnsupportedOperationException( "Method not yet implemented" );
     }
 

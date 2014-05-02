@@ -14,7 +14,7 @@ public interface StatisticsService {
 
     public void cleanupStatistics(long timestamp) throws Exception;
 
-    public List<StatisticBO> search(String word, String type, int offset, int limit, String sort, String order, long timestamp) throws Exception;
+    public List<StatisticBO> search(String word, String type, int offset, int limit, int sort, int order, long timestamp) throws Exception;
 
     public List<StatisticBO> filter(String user, String category, String categoryId, String type, boolean isPrivate, long timestamp) throws Exception;
 

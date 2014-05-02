@@ -117,7 +117,7 @@ public class StatisticsRestService implements ResourceContainer {
             statisticsService = ServiceLookupManager.getInstance().getStatisticsService();
 
 
-            statisticBOs = statisticsService.search(criteria, searchScope, Integer.parseInt(offset), Integer.parseInt(limit), sort, order, 0);
+            statisticBOs = statisticsService.search(criteria, searchScope, Integer.parseInt(offset), Integer.parseInt(limit), Integer.parseInt(sort), Integer.parseInt(order), 0);
 
             statistics.setStatistics(statisticBOs);
 
