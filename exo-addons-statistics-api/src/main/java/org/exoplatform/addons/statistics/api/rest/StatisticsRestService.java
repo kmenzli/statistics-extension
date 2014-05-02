@@ -140,6 +140,50 @@ public class StatisticsRestService implements ResourceContainer {
     }
 
     @GET
+    @Path("/filter.{format}")
+    @RolesAllowed("users")
+    public Response filter(@Context UriInfo uriInfo,
+                           @QueryParam("user") String user,
+                           @QueryParam("category") String category,
+                           @QueryParam("categoryId") String categoryId,
+                           @QueryParam("type") String type,
+                           @QueryParam("timestamp") String timestamp,
+                           @PathParam("format") String format) throws Exception {
+
+        MediaType mediaType = Util.getMediaType(format, mediaTypes);
+
+        List<StatisticBO> statisticBOs = null;
+
+        statistics =  new StatisticsList();
+
+
+        try {
+
+            statisticsService = ServiceLookupManager.getInstance().getStatisticsService();
+
+            statisticBOs = statisticsService.filter(user, category, categoryId,type ,true, Integer.parseInt(timestamp));
+
+            statistics.setStatistics(statisticBOs);
+
+        } catch (StatisticsException E) {
+
+            LOG.warn("The filter parameters has not been filled out correctly please check your request, user ["+user+"], category ["+category+"], categoryId["+categoryId+"], type["+type+" and timestamp["+timestamp+"]");
+
+            return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
+
+
+        } catch (Exception E) {
+
+            LOG.warn("The filter parameters has not been filled out correctly please check your request, user ["+user+"], category ["+category+"], categoryId["+categoryId+"], type["+type+" and timestamp["+timestamp+"]");
+
+            return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
+
+        }
+
+        return Util.getResponse(statistics, uriInfo, mediaType, Response.Status.OK);
+    }
+
+    @GET
     @Path("/export/.{format}")
     @RolesAllowed("administrators")
     public Response exportStatistics() throws Exception {
