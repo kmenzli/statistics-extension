@@ -28,6 +28,8 @@ public class StatisticsServiceImplTestCase extends AbstractTestCase {
     String categoryId = "categoryId";
     String content = "content";
     String link = "link";
+    String site = "site";
+    String siteType = "siteType";
     boolean isRead = true;
 
 
@@ -51,7 +53,7 @@ public class StatisticsServiceImplTestCase extends AbstractTestCase {
     //@PerfTest(invocations = 10, threads = 1)
     public void testAddEntry() throws Exception {
 
-        addStatistics(20,null,null,null,null,null);
+        addStatistics(20,null,null,null,null,null,null);
 
         statisticBOs = statisticsService.getStatistics(0);
 
@@ -60,42 +62,42 @@ public class StatisticsServiceImplTestCase extends AbstractTestCase {
         statisticsService.cleanupStatistics(0);
 
     }
-/** When fired alone the testcase pass but when activated with other unit test it fail : I don't know why ??!!!
-    @Test
-    public void testCleanupStatistics() throws Exception {
+    /** When fired alone the testcase pass but when activated with other unit test it fail : I don't know why ??!!!
+     @Test
+     public void testCleanupStatistics() throws Exception {
 
-        addStatistics(50,null,null,null);
+     addStatistics(50,null,null,null);
 
-        long currentTimestamp1 = System.currentTimeMillis();
+     long currentTimestamp1 = System.currentTimeMillis();
 
-        Thread.currentThread().sleep(6*1000);
+     Thread.currentThread().sleep(6*1000);
 
-        addStatistics(50,null,null,null);
+     addStatistics(50,null,null,null);
 
-        long currentTimestamp2 = System.currentTimeMillis();
+     long currentTimestamp2 = System.currentTimeMillis();
 
-        Thread.currentThread().sleep(6*1000);
+     Thread.currentThread().sleep(6*1000);
 
-        statisticsService.cleanupStatistics(currentTimestamp1);
+     statisticsService.cleanupStatistics(currentTimestamp1);
 
-        statisticBOs = statisticsService.getStatistics(0);
+     statisticBOs = statisticsService.getStatistics(0);
 
-        assertThat(statisticBOs.size()).isEqualTo(50);
+     assertThat(statisticBOs.size()).isEqualTo(50);
 
-        statisticsService.cleanupStatistics(currentTimestamp2);
+     statisticsService.cleanupStatistics(currentTimestamp2);
 
-        statisticBOs = statisticsService.getStatistics(0);
+     statisticBOs = statisticsService.getStatistics(0);
 
-        assertThat(statisticBOs.size()).isEqualTo(0);
+     assertThat(statisticBOs.size()).isEqualTo(0);
 
-    }
- */
+     }
+     */
 
     @Test
     @PerfTest(invocations = 5, threads = 1)
     public void testGetAllStatistics() throws Exception {
 
-        addStatistics(5,null,null,null,null,null);
+        addStatistics(5,null,null,null,null,null,null);
 
         statisticBOs = statisticsService.getStatistics(0);
 
@@ -103,7 +105,7 @@ public class StatisticsServiceImplTestCase extends AbstractTestCase {
 
         statisticsService.cleanupStatistics(0);
 
-        addStatistics(10,null,null,null,null,null);
+        addStatistics(10,null,null,null,null,null,null);
 
         statisticBOs = statisticsService.getStatistics(0);
 
@@ -111,7 +113,7 @@ public class StatisticsServiceImplTestCase extends AbstractTestCase {
 
         statisticsService.cleanupStatistics(0);
 
-        addStatistics(20,null,null,null,null,null);
+        addStatistics(20,null,null,null,null,null,null);
 
         statisticBOs = statisticsService.getStatistics(0);
 
@@ -126,37 +128,65 @@ public class StatisticsServiceImplTestCase extends AbstractTestCase {
     @Test
     public void testFilter() throws Exception {
 
-        addStatistics(5,null,null,null,null,null);
+        addStatistics(5,null,null,null,null,null,null);
         // user, category, categoryId, type, isPrivate, timestamp)
-        statisticBOs = statisticsService.filter("user1", null ,null ,null ,null ,null ,false ,0);
+        statisticBOs = statisticsService.filter("user1", null ,null ,null ,null ,null, null ,false ,0);
 
         assertThat(statisticBOs.size()).isEqualTo(1);
 
-        statisticBOs = statisticsService.filter("user1" ,null ,"AAA" ,null ,null ,null ,false,0);
+        statisticBOs = statisticsService.filter("user1" ,null ,"AAA" ,null ,null ,null ,null, false,0);
 
         assertThat(statisticBOs.size()).isEqualTo(0);
 
-        statisticBOs = statisticsService.filter("user1" ,null ,"categoryId1" ,null ,null ,null ,false ,0);
+        statisticBOs = statisticsService.filter("user1" ,null ,"categoryId1" ,null ,null ,null ,null ,false ,0);
 
         assertThat(statisticBOs.size()).isEqualTo(1);
 
         statisticsService.cleanupStatistics(0);
 
-        addStatistics(5,"khemais", null, null, null, null);
+        addStatistics(5,"khemais", null, null, null, null,null);
 
         long currenttime1 = System.currentTimeMillis();
 
         Thread.currentThread().sleep(3*1000);
 
-        addStatistics(5 ,"khemais" ,"category" ,null ,null, null);
+        addStatistics(5 ,"khemais" ,"category" ,null ,null, null,null);
 
-        statisticBOs = statisticsService.filter("khemais" ,"category0" ,null ,null ,null ,null ,false ,currenttime1);
+        statisticBOs = statisticsService.filter("khemais" ,"category0" ,null ,null ,null ,null, null ,false ,currenttime1);
 
         assertThat(statisticBOs.size()).isEqualTo(1);
 
-        statisticBOs = statisticsService.filter(null ,null , null ,null ,null, null,false,currenttime1);
+        statisticBOs = statisticsService.filter(null ,null , null ,null ,null,null ,null ,false,currenttime1);
 
         assertThat(statisticBOs.size()).isEqualTo(15);
+
+
+        /** TEST Search by Content **/
+
+        //--- cleanup all statistics
+        statisticsService.cleanupStatistics(0);
+
+        //--- add statistics
+        addStatistics(5,null,null,null,null,null,"Je suis un exoers");
+
+        //--- Should returns all tuples
+        statisticBOs = statisticsService.filter( null,null ,null ,null ,null ,null, null ,false ,currenttime1);
+
+        assertThat(statisticBOs.size()).isEqualTo(10);
+
+        //--- return only tuples with content contains%suis%
+        statisticBOs = statisticsService.filter( null,null ,null ,null ,null ,null, "suis" ,false ,currenttime1);
+
+        assertThat(statisticBOs.size()).isEqualTo(5);
+
+        //--- return only tuples with content contains%pres%
+        statisticBOs = statisticsService.filter( null,null ,null ,null ,null ,null, "pres" ,false ,currenttime1);
+
+        assertThat(statisticBOs.size()).isEqualTo(0);
+
+
+        /** FIN **/
+
 
 
     }
@@ -175,7 +205,7 @@ public class StatisticsServiceImplTestCase extends AbstractTestCase {
     @Test
     public void testSearch() throws Exception {
 
-        addStatistics(5,"demo","presales","exoplatform", null, null);
+        addStatistics(5,"demo","presales","exoplatform", null, null,null);
 
         statisticBOs = statisticsService.search("demo","user",10,10,1,1,0);
 
@@ -203,30 +233,35 @@ public class StatisticsServiceImplTestCase extends AbstractTestCase {
 
     }
 
-    private void addStatistics (int total, String theUser, String theCategory, String theType, String theSite, String theSiteType) throws Exception {
+    private void addStatistics (int total, String theUser, String theCategory, String theType, String theSite, String theSiteType, String theContent) throws Exception {
 
-       for (int i = 0; i < total; i++) {
+        for (int i = 0; i < total; i++) {
 
             if ( theCategory != null) {
 
-                statisticsService.addEntry(user+i, from+i, type+i, theCategory, categoryId+i, content+i, link+i, theSite+i, theSiteType+i);
+                statisticsService.addEntry(user+i, from+i, type+i, theCategory, categoryId+i, content+i, link+i, site+i, siteType+i);
 
             }
 
             if ( theType != null) {
 
-                statisticsService.addEntry(user+i, from+i, theType, category+i, categoryId+i, content+i, link+i, theSite+i, theSiteType+i);
+                statisticsService.addEntry(user+i, from+i, theType, category+i, categoryId+i, content+i, link+i, site+i, siteType+i);
 
             }
 
-           if ( theUser != null) {
+            if ( theUser != null) {
 
-               statisticsService.addEntry(theUser, from+i, type+i, category+i, categoryId+i, content+i, link+i, theSite+i, theSiteType+i);
+                statisticsService.addEntry(theUser, from+i, type+i, category+i, categoryId+i, content+i, link+i, site+i, siteType+i);
 
-           }
+            }
+            if ( theContent != null) {
+
+                statisticsService.addEntry(user+i, from+i, type+i, category+i, categoryId+i, theContent, link+i, site+i, siteType+i);
+
+            }
 
 
-            statisticsService.addEntry(user+i, from+i, type+i , category+i, categoryId+i, content+i, link+i, theSite+i, theSiteType+i);
+            statisticsService.addEntry(user+i, from+i, type+i , category+i, categoryId+i, content+i, link+i, site+i, siteType+i);
 
         }
 

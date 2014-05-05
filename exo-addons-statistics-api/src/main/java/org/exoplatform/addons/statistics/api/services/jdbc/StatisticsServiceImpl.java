@@ -27,7 +27,7 @@ public class StatisticsServiceImpl implements StatisticsService, ResourceContain
     }
 
     @Override
-    public List<StatisticBO> filter(String user, String category, String categoryId, String type, String site, String siteType, boolean isPrivate, long timestamp) throws Exception {
+    public List<StatisticBO> filter(String user, String category, String categoryId, String type, String site, String siteType, String content, boolean isPrivate, long timestamp) throws Exception {
         throw new UnsupportedOperationException( "Method not yet implemented" );
     }
 

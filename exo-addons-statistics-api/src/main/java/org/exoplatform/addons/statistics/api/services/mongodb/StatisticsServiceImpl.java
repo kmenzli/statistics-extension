@@ -166,7 +166,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public List<StatisticBO> filter(String user, String category, String categoryId, String type, String site, String siteType, boolean isPrivate, long timestamp) throws Exception {
+    public List<StatisticBO> filter(String user, String category, String categoryId, String type, String site, String siteType, String content, boolean isPrivate, long timestamp) throws Exception {
 
         LinkedList<StatisticBO> statistics = new LinkedList<StatisticBO>();
 
@@ -175,6 +175,11 @@ public class StatisticsServiceImpl implements StatisticsService {
         BasicDBObject query = new BasicDBObject("isPrivate", isPrivate);
 
         //TODO : replace if blocs by a design pattern
+        if (content != null) {
+
+            query.put("content", new BasicDBObject("$regex", content));
+
+        }
         if (user != null) {
 
             query.put("user",user);

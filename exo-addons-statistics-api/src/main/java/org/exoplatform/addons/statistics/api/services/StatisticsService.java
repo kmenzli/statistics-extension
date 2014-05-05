@@ -16,7 +16,7 @@ public interface StatisticsService {
 
     public List<StatisticBO> search(String word, String type, int offset, int limit, int sort, int order, long timestamp) throws Exception;
 
-    public List<StatisticBO> filter(String user, String category, String categoryId, String type, String site, String siteType, boolean isPrivate, long timestamp) throws Exception;
+    public List<StatisticBO> filter(String user, String category, String categoryId, String type, String site, String siteType, String content, boolean isPrivate, long timestamp) throws Exception;
 
     public StatisticBO addEntry(String user, String from, String type, String category, String categoryId, String content, String link, String site, String siteType) throws Exception;
 

@@ -151,6 +151,7 @@ public class StatisticsRestService implements ResourceContainer {
                            @QueryParam("type") String type,
                            @QueryParam("site") String site,
                            @QueryParam("siteType") String siteType,
+                           @QueryParam("content") String content,
                            @QueryParam("timestamp") String timestamp,
                            @PathParam("format") String format) throws Exception {
 
@@ -165,7 +166,7 @@ public class StatisticsRestService implements ResourceContainer {
 
             statisticsService = ServiceLookupManager.getInstance().getStatisticsService();
 
-            statisticBOs = statisticsService.filter(user, category, categoryId, type, site, siteType,true, Integer.parseInt(timestamp));
+            statisticBOs = statisticsService.filter(user, category, categoryId, type, site, siteType, content,true, Integer.parseInt(timestamp));
 
             statistics.setStatistics(statisticBOs);
 
