@@ -2,32 +2,80 @@ define( "statisticsControllers", [ "SHARED/jquery", "SHARED/juzu-ajax" ], functi
 {
 
   var statisticsCtrl = function($scope, $http,statisticsService) {
+
     var statisticsContainer = $('#statistics');
 
-    $scope.stat = "happy";
+    $scope.scope = "User";
 
-    $scope.loadStat = function(stat) {
-      $scope.stat = stat;
-      if(stat == 'crazy') {
+    $scope.changeScope = function(scope) {
+      $scope.scope = scope;
+      if(scope == 'User') {
 
         $scope.loadStatistics();
-      } else if (stat == 'freaky') {
-          alert("I'm freaky");
+
+      } else if (scope == 'Category') {
+
+      } else if (scope == 'CategoryId') {
+
       } else {
-          alert("I'm happy");
+
       }
     };
       /** Load stat servers **/
       $scope.loadStatistics = function() {
         $http.get(statisticsContainer.jzURL('StatisticsApplication.getStatistics')).success(function (data) {
-          $scope.globalStatistics = data.statisticBeanList;
+          $scope.statistics = data.statisticBeanList;
         });
 
       };
 
+      $scope.displaySearchForm = function() {
+      };
+
+      // Search action
+      $scope.search = function() {
+
+          var paramsOptions = "content=rien&category=cateoryA";
+          var userParam = "&user=khemais";
+          $http({
+              method: 'POST',
+              url: statisticsContainer.jzURL('StatisticsApplication.search'),
+              data: paramsOptions + userParam,
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          }).success(function (data) {
+                  $scope.setResultMessage(data, "success");
+              }).error(function (data) {
+                  $scope.setResultMessage(data, "error");
+              });
+
+      };
+
+      /**********************************************************************/
+      /*                            FACETS                              */
+      /**********************************************************************/
+
+      // facets types
+      $scope.facets = [];
+      $scope.facetsType = [];
+      $scope.isShown = false;
+
+      $scope.loadingFacetsTree = true;
+
+      $http.get(statisticsContainer.jzURL('StatisticsApplication.getFacets')).success(function (data) {
+          $scope.facets = data.facets;
+          $scope.loadingFacetsTree = false;
+      });
+
+      $scope.toggleFacetSelection = function(selectedFacet) {
+          $scope.isShown = true;
 
 
+      };
 
+      // Filter action
+      $scope.search = function() {
+
+      };
   };
 
   return statisticsCtrl;

@@ -41,11 +41,11 @@
 
         },
         stylesheets = {
-                @Stylesheet(src = "/org/exoplatform/addons/statistics/portlet/statistics/assets/css/bootstrap.css",location = AssetLocation.APPLICATION, id = "bootstrap")
+                @Stylesheet(src = "/org/exoplatform/addons/statistics/portlet/statistics/assets/css/statistics.css",location = AssetLocation.APPLICATION, id = "statistics")
         }
 )
 
-@Less(value = "css/bootstrap.less", minify = true)
+@Less(value = "css/statistics.less", minify = true)
 
 
 package org.exoplatform.addons.statistics.portlet.statistics;

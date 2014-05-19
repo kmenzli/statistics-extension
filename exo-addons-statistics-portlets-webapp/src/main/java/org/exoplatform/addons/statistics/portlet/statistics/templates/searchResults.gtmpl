@@ -1,0 +1,3 @@
+<div class="no-resource-selected" ng-show="true">
+<i>No resource selected</i>
+  </div>

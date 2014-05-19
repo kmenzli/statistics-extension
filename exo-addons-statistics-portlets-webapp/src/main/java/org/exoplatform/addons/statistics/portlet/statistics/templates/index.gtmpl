@@ -1,48 +1,101 @@
 <div class="statistics" style="padding: 10px" id="statistics">
 
-<div ng-controller="statisticsCtrl">
-<div class="mode-items">
-<span class="uiRadio">
-<label class="radio">
-<input type="radio" name="stat" value="happy" ng-model="stat" ng-click="loadStat('happy')"/>
-<span>happy</span>
-				</label>
-</span>
-         </div>
+	<div ng-controller="statisticsCtrl">
+		<div class="uiBox scopes">
+			<h5 class="title">Light Search</h5>
+			<div class="scope-items">
+				<span class="uiRadio">
+					<label class="radio">
+						<input type="radio" name="scope" value="User" ng-model="scope" ng-click="changeScope('User')"/>
+						<span>User</span>
+					</label>
+				</span>
+				<span class="uiRadio">
+					<label class="radio">
+						<input type="radio" name="scope" value="Category" ng-model="scope" ng-click="changeScope('Category')"/>
+						<span>Category</span>
+					</label>
+				</span>
+				<span class="uiRadio">
+					<label class="radio">
+						<input type="radio" name="scope" value="CategoryId" ng-model="scope" ng-click="changeScope('CategoryId')"/>
+						<span>CategoryId</span>
+					</label>
+				</span>
+				<span class="uiRadio">
+					<label class="radio">
+						<input type="radio" name="scope" value="ALL" ng-model="scope" ng-click="changeScope('ALL')"/>
+						<span>ALL</span>
+					</label>
+				</span>
+			</div>
+			<div class="scope-options clearfix">
+			#{include path=scopeALLOptions.gtmpl}#{/include}
+			</div>
+		</div>
+		<div class="buttons">
+			<button type="button" class="btn btn-primary button-search" ng-click="search()">Search by Criteria</button>
+		</div>
 
-<form action="@{add()}" method="post" style="float:left">
-<fieldset>
-<div class="controls">
-<div class="input-append">
-<input class="span2" type="text" size="16"name="username" value=""/>
-</div>
-					<div class="input-append">
-						<input class="span2" type="text" size="16"name="from" value=""/>
-</div>
-					<div class="input-append">
-						<input class="span2" type="text" size="16"name="type" value=""/>
-</div>
-					<div class="input-append">
-						<input class="span2" type="text" size="16"name="category" value=""/>
-</div>
-					<div class="input-append">
-						<input class="span2" type="text" size="16"name="categoryId" value=""/>
-</div>
-					<div class="input-append">
-						<input class="span2" type="text" size="16"name="content" value=""/>
-</div>
-					<div class="input-append">
-						<input class="span2" type="text" size="16"name="link" value=""/>
-</div>
-					<div class="input-append">
-						<input class="span2" type="text" size="16"name="isRead" value=""/><button type="submit" class="btn">Add</button>
+		<div class="resources-panel">
+
+			<div class="uiBox left-column">
+				<h5 class="title">Facets</h5>
+				<div class="uiTreeExplorer treeview">
+					<ul>
+						<div class="loader" ng-show="loadingFacetsTree">Loading...</div>
+						<li class="resource-facet">
+							<ul>
+								<li class="leaf" ng-repeat="facet in facets">
+									<span class="uiCheckbox">
+										<input type="checkbox" id="{{facet.label}}" class="resource-facet-checkbox" ng-click="toggleFacetSelection(facet.label)"/>
+										<span/>																
+									</span>		
+                            {{facet.label}} 							
+									<div class="resources" ng-show="isShown">
+										<input type="text" class="search-resources"/>								
+									</div>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<div style="clear:both"/>
+					<div class="buttons">
+						<button type="button" class="btn btn-primary button-search" ng-click="filter()" >Filter</button>
 					</div>
-</div>
-            </fieldset>
-</form>
+				</div>
 
-        <div style="clear:both"/>
 
-</div>
+
+			</div>
+		</div>
+<!--
+		<div class="resources-panel">
+			<div class="uiBox left-column">
+				<h5 class="title">Statistical charts and diagrams</h5>
+				<div class="uiTreeExplorer treeview">
+					<div style="clear:both"/>
+					<div class="buttons">
+						<button type="button" class="btn btn-primary button-search" ng-click="filter()" >Generate</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+-->		
+
+		<div class="resources-panel">
+			<div class="uiBox right-column">
+				<h5 class="title">Search Results</h5>
+				<div id="selectedResourcesForm">
+					  #{include path=searchResults.gtmpl}#{/include}
+				</div>
+			</div>
+		</div>
+
+
+
+
+	</div>
 
 </div>
