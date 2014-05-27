@@ -308,15 +308,26 @@ public class StatisticsServiceImpl implements StatisticsService {
                 DBObject doc = cursor.next();
                 StatisticBO statisticBO = new StatisticBO();
                 statisticBO.setTimestamp((Long)doc.get("timestamp"));
-                statisticBO.setUser(doc.get("user").toString());
-                if (doc.containsField("from")) {
+                if (doc.get("user") != null) {
+                    statisticBO.setUser(doc.get("user").toString());
+                }
+                if (doc.get("from") != null) {
                     statisticBO.setFrom(doc.get("from").toString());
                 }
-                statisticBO.setCategory(doc.get("category").toString());
+                if (doc.get("category") != null) {
+                    statisticBO.setCategory(doc.get("category").toString());
+                }
                 statisticBO.setCategoryId(doc.get("categoryId").toString());
-                statisticBO.setType(doc.get("type").toString());
-                statisticBO.setContent(doc.get("content").toString());
-                statisticBO.setLink(doc.get("link").toString());
+                if (doc.get("type") != null) {
+                    statisticBO.setType(doc.get("type").toString());
+                }
+                if (doc.get("content") != null) {
+                    statisticBO.setContent(doc.get("content").toString());
+                }
+                if (doc.get("link") != null) {
+                    statisticBO.setLink(doc.get("link").toString());
+                }
+
                 statisticBO.setSite(doc.get("site").toString());
                 statisticBO.setSiteType(doc.get("siteType").toString());
 

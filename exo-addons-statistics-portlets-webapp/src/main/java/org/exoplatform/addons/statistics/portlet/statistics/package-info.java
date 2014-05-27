@@ -29,7 +29,7 @@
 )
 
 @Assets(
-        //location = AssetLocation.SERVER,
+        location = AssetLocation.SERVER,
         scripts = {
 
                 // AngularJS is still global, should be AMDified

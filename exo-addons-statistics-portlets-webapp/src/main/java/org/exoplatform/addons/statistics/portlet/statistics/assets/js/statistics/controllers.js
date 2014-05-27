@@ -1,82 +1,119 @@
 define( "statisticsControllers", [ "SHARED/jquery", "SHARED/juzu-ajax" ], function ( $ )
 {
 
-  var statisticsCtrl = function($scope, $http,statisticsService) {
+    var statisticsCtrl = function($scope, $http,statisticsService) {
 
-    var statisticsContainer = $('#statistics');
+        var statisticsContainer = $('#statistics');
 
-    $scope.scope = "User";
 
-    $scope.changeScope = function(scope) {
-      $scope.scope = scope;
-      if(scope == 'User') {
+        /**********************************************************************/
+        /*                 POPULATE FICTIVE STAT (populate/unpopulate)        */
+        /**********************************************************************/
 
-        $scope.loadStatistics();
 
-      } else if (scope == 'Category') {
+        /** Build the populate URL*/
+        $("#populator_div").live('click', function(event){
 
-      } else if (scope == 'CategoryId') {
+            $scope.populate($scope.perform);
 
-      } else {
-
-      }
-    };
-      /** Load stat servers **/
-      $scope.loadStatistics = function() {
-        $http.get(statisticsContainer.jzURL('StatisticsApplication.getStatistics')).success(function (data) {
-          $scope.statistics = data.statisticBeanList;
         });
 
-      };
+        // Populate method to invoke the Controller side
+        $scope.populate = function(perform) {
+            $http.post(statisticsContainer.jzURL('StatisticsApplication.populate') + '&filter='+perform).success(function (data) {
+                $scope.setResultMessage(data, "success");
+            }).error(function (data) {
+                    $scope.setResultMessage(data, "error");
+                });
+        };
 
-      $scope.displaySearchForm = function() {
-      };
+        /**********************************************************************/
+        /*                 FIN POPULATE        */
+        /**********************************************************************/
 
-      // Search action
-      $scope.search = function() {
+        $scope.resultMessage = "";
+        $scope.resultMessageClass = "alert-info";
 
-          var paramsOptions = "content=rien&category=cateoryA";
-          var userParam = "&user=khemais";
-          $http({
-              method: 'POST',
-              url: statisticsContainer.jzURL('StatisticsApplication.search'),
-              data: paramsOptions + userParam,
-              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-          }).success(function (data) {
-                  $scope.setResultMessage(data, "success");
-              }).error(function (data) {
-                  $scope.setResultMessage(data, "error");
-              });
-
-      };
-
-      /**********************************************************************/
-      /*                            FACETS                              */
-      /**********************************************************************/
-
-      // facets types
-      $scope.facets = [];
-      $scope.facetsType = [];
-      $scope.isShown = false;
-
-      $scope.loadingFacetsTree = true;
-
-      $http.get(statisticsContainer.jzURL('StatisticsApplication.getFacets')).success(function (data) {
-          $scope.facets = data.facets;
-          $scope.loadingFacetsTree = false;
-      });
-
-      $scope.toggleFacetSelection = function(selectedFacet) {
-          $scope.isShown = true;
+        // function which set the result message with the given style
+        $scope.setResultMessage = function(text, type) {
+            $scope.resultMessageClass = "alert-" + type;
+            $scope.resultMessage = text;
+        };
 
 
-      };
 
-      // Filter action
-      $scope.search = function() {
+        $scope.scope = "User";
 
-      };
-  };
+        $scope.changeScope = function(scope) {
+            $scope.scope = scope;
+            if(scope == 'User') {
 
-  return statisticsCtrl;
+                $scope.loadStatistics();
+
+            } else if (scope == 'Category') {
+
+            } else if (scope == 'CategoryId') {
+
+            } else {
+
+            }
+        };
+        /** Load stat servers **/
+        $scope.loadStatistics = function() {
+            $http.get(statisticsContainer.jzURL('StatisticsApplication.getStatistics')).success(function (data) {
+                $scope.statistics = data.statisticBeanList;
+            });
+
+        };
+
+        $scope.displaySearchForm = function() {
+        };
+
+        // Search action
+        $scope.search = function() {
+
+            var paramsOptions = "content=rien&category=cateoryA";
+            var userParam = "&user=khemais";
+            $http({
+                method: 'POST',
+                url: statisticsContainer.jzURL('StatisticsApplication.search'),
+                data: paramsOptions + userParam,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).success(function (data) {
+                    $scope.setResultMessage(data, "success");
+                }).error(function (data) {
+                    $scope.setResultMessage(data, "error");
+                });
+
+        };
+
+        /**********************************************************************/
+        /*                            FACETS                              */
+        /**********************************************************************/
+
+            // facets types
+        $scope.facets = [];
+        $scope.facetsType = [];
+        $scope.isShown = false;
+
+        $scope.loadingFacetsTree = true;
+
+        $http.get(statisticsContainer.jzURL('StatisticsApplication.getFacets')).success(function (data) {
+            $scope.facets = data.facets;
+            $scope.loadingFacetsTree = false;
+        });
+
+        $scope.toggleFacetSelection = function(selectedFacet) {
+            $scope.isShown = true;
+
+
+        };
+
+        // Filter action
+        $scope.search = function() {
+
+        };
+    };
+
+    return statisticsCtrl;
 });

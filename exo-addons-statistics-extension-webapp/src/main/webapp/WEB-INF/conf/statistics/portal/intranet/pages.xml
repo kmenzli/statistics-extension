@@ -27,7 +27,6 @@
       <title>statistics</title>
       <access-permissions>*:/platform/users</access-permissions>
       <edit-permission>*:/platform/administrators</edit-permission>
-      <show-max-window>true</show-max-window>
       <portlet-application>
          <portlet>
             <application-ref>statistics-portlets</application-ref>

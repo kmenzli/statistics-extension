@@ -1,0 +1,41 @@
+statistics:
+- user: john
+  from: mary
+  type: MOOD
+  content: je suis
+  link:
+  category: eXo
+  site: space1
+  siteType: space
+  categoryId: TQA
+  timestamp: 0
+- user: john
+  from:
+  type: MOOD
+  content: Je suis
+  link:
+  category: eXo
+  site: intranet
+  siteType: site
+  categoryId: PLF
+  timestamp: 0
+- user: john
+  from:
+  type: MOOD
+  content: Je suis
+  link:
+  category: eXo
+  site: acme
+  siteType: site
+  categoryId: PreSales
+  timestamp: 0
+- user: john
+  from:
+  type: MOOD
+  content: Je suis
+  link:
+  category: eXo
+  site: intranet
+  siteType: site
+  categoryId: PreSales
+  timestamp: 0

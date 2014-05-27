@@ -2,15 +2,24 @@ package org.exoplatform.addons.statistics.portlet.statistics;
 
 import juzu.*;
 import juzu.template.Template;
+import org.apache.commons.io.IOUtils;
 import org.exoplatform.addons.statistics.api.bo.StatisticBO;
 import org.exoplatform.addons.statistics.api.services.StatisticsService;
 import org.exoplatform.addons.statistics.api.web.listener.StatisticsLifecycleListener;
+import org.exoplatform.addons.statistics.populate.bean.PopulatorBean;
+import org.exoplatform.addons.statistics.populate.bean.StatisticBean;
+import org.exoplatform.addons.statistics.services.Utils;
 import org.exoplatform.commons.juzu.ajax.Ajax;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
+import org.yaml.snakeyaml.TypeDescription;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -24,7 +33,10 @@ public class StatisticsApplication {
     StatisticsService statisticsService;
 
     static List<String> resources = new ArrayList<String>();
+
     static List<Facet> facets = new ArrayList<Facet>();
+
+    String data = "";
 
     public StatisticsApplication () {
 
@@ -106,6 +118,62 @@ public class StatisticsApplication {
 
 
     }
+    @Ajax
+    @Resource
+    public Response.Content populate(String perform) {
+
+        StringBuilder sb = new StringBuilder() ;
+
+        PopulatorBean populatorBean = getData();
+
+        sb.append("{\"status\": \"OK\"}");
+
+        try {
+
+            for (StatisticBean stat:populatorBean.getStatistics())
+            {
+
+                statisticsService.addEntry(stat.getUser(),stat.getFrom(),stat.getType(),stat.getCategory(),stat.getCategoryId(),stat.getContent(),stat.getLink(),stat.getSite(),stat.getSiteType());
+            }
+
+        } catch (Exception E) {
+
+        }
+        try {
+
+            statisticsService.getStatistics(0);
+
+        } catch (Exception E) {
+
+        }
+
+
+        return Response.ok(sb.toString()).withMimeType("application/json; charset=UTF-8").withHeader("Cache-Control", "no-cache");
+    }
+
+    public String getDataAsString() {
+
+        if ("".equals(data))
+        {
+            data = Utils.getData("statistics.yml");
+        }
+        return data;
+    }
+
+    public PopulatorBean getData() {
+        Constructor constructor = new Constructor(PopulatorBean.class);
+        TypeDescription populatorDescription = new TypeDescription(PopulatorBean.class);
+        populatorDescription.putListPropertyType("statistics", StatisticBean.class);
+        constructor.addTypeDescription(populatorDescription);
+        Yaml yaml = new Yaml(constructor);
+        String data = getDataAsString();
+        PopulatorBean populatorBean = (PopulatorBean)yaml.load(data);
+        return populatorBean;
+    }
+
+
+
+
 
     public static String facetsJSON(List<Facet> facets)
     {
@@ -113,6 +181,7 @@ public class StatisticsApplication {
         sb.append("{\"facets\": [");
         boolean first=true;
         for (Facet facet:facets) {
+
             if (!first) {
                 sb.append(",");
             } else {

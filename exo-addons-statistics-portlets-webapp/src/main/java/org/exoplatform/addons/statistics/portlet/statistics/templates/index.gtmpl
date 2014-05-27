@@ -1,5 +1,20 @@
 <div class="statistics" style="padding: 10px" id="statistics">
 
+	<div id="populator_div" ng-show="perform" ng-init="perform=true">
+		<div class="uiGrayLightBox clearfix no-user-selection">
+			<span style="float: left">
+				<label>Populate Effectif Stats</label>
+			</span>
+
+			<span style="float: right;">
+		
+				<a type="button" class="btn btn-primary pull-right" title="Start" ng-click="perform = false"><i class="icon-fire icon-white"></i>Start Populating</a>
+
+			</span>
+
+		</div>
+	</div>
+
 	<div ng-controller="statisticsCtrl">
 		<div class="uiBox scopes">
 			<h5 class="title">Light Search</h5>
@@ -69,7 +84,7 @@
 
 			</div>
 		</div>
-<!--
+		<!--
 		<div class="resources-panel">
 			<div class="uiBox left-column">
 				<h5 class="title">Statistical charts and diagrams</h5>

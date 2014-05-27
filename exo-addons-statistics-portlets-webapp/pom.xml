@@ -125,6 +125,13 @@
             <version>0.6.0</version>
             <scope>test</scope>
         </dependency>
+        <!-- YAML API -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.12</version>
+        </dependency>
+        <!-- FIN -->
     </dependencies>
     <build>
         <finalName>statistics-application</finalName>
